@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LuckyPay · Premium Coupon Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --primary:#22c55e;--dark:#16a34a;--deep:#0a6b2f;--light:#4ade80;
+  --bg1:#f0fdf4;--bg2:#dcfce7;--bg3:#bbf7d0;
+  --ink:#0a2e1c;--muted:#5c7a68;
+  --greenDeep:#0a6b2f;--red:#ef4444;--redDeep:#7f1d1d;
+  --blue:#3b82f6;--blueDeep:#1e3a8a;
+  --amber:#f59e0b;--amberDeep:#78350f;
+  --purple:#8b5cf6;--purpleDeep:#4c1d95;
+  --glow:rgba(34,197,94,.35);
+  --shadow-sm:0 2px 6px rgba(10,46,28,.08);
+  --shadow-md:0 4px 14px rgba(10,46,28,.1);
+  --shadow-lg:0 10px 30px rgba(10,46,28,.15);
+  --shadow-inner:inset 0 1px 0 rgba(255,255,255,.6);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{
+  margin:0;
+  font-family:'Fredoka',sans-serif;
+  background:radial-gradient(circle at 20% 0%, #e7f9ec 0%, #d1f2dc 40%, #bbf7d0 100%);
+  color:var(--ink);
+  min-height:100vh;
+  padding-bottom:40px;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ============= HEADER ============= */
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:linear-gradient(180deg,#22c55e 0%,#16a34a 50%,#0a6b2f 100%);
+  padding:16px 18px 20px;
+  color:#fff;
+  border-radius:0 0 28px 28px;
+  box-shadow:0 10px 30px rgba(10,107,47,.35), inset 0 1px 0 rgba(255,255,255,.25);
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:'';
+  position:absolute;
+  top:-50%;right:-30%;
+  width:200px;height:200px;
+  background:radial-gradient(circle, rgba(255,255,255,.18), transparent 70%);
+  border-radius:50%;
+  pointer-events:none;
+}
+.header::after{
+  content:'';
+  position:absolute;
+  bottom:-40%;left:-20%;
+  width:160px;height:160px;
+  background:radial-gradient(circle, rgba(255,255,255,.12), transparent 70%);
+  border-radius:50%;
+  pointer-events:none;
+}
+.header h1{
+  margin:0;
+  font-size:21px;
+  font-weight:800;
+  text-align:center;
+  letter-spacing:.3px;
+  text-shadow:0 2px 6px rgba(0,0,0,.15);
+  position:relative;z-index:2;
+}
+.header p{
+  margin:5px 0 0;
+  font-size:11.5px;
+  opacity:.9;
+  font-weight:600;
+  text-align:center;
+  letter-spacing:.4px;
+  position:relative;z-index:2;
+}
+.header-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:rgba(255,255,255,.2);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.3);
+  padding:3px 10px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:700;
+  margin-top:8px;
+  position:relative;z-index:2;
+  left:50%;transform:translateX(-50%);
+}
+
+.container{max-width:640px;margin:0 auto;padding:0 14px;}
+
+/* ============= PREMIUM CARDS ============= */
+.card{
+  background:linear-gradient(180deg,#ffffff 0%,#fafffb 100%);
+  border-radius:22px;
+  padding:18px 16px;
+  margin:14px 0;
+  box-shadow:var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.8);
+  border:1px solid rgba(74,222,128,.25);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#4ade80,#22c55e,#16a34a,#22c55e,#4ade80);
+  background-size:200% 100%;
+  animation:shine 4s linear infinite;
+}
+@keyframes shine{
+  0%{background-position:0% 50%;}
+  100%{background-position:200% 50%;}
+}
+.card h3{
+  margin:0 0 14px;
+  font-size:15.5px;
+  color:var(--deep);
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  letter-spacing:.2px;
+}
+.card h3 i{
+  width:32px;height:32px;
+  border-radius:11px;
+  background:linear-gradient(135deg,#4ade80,#16a34a);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+  box-shadow:0 4px 10px rgba(34,197,94,.4), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.card h3 .cnt{
+  margin-left:auto;
+  background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+  color:var(--deep);
+  font-size:11px;
+  padding:4px 12px;
+  border-radius:12px;
+  font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+/* ============= FORM FIELDS ============= */
+.field{margin-bottom:11px;}
+.field label{
+  display:block;
+  font-size:10.5px;
+  color:var(--muted);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  margin:0 0 6px 6px;
+}
+.field input,.field textarea{
+  width:100%;
+  border:1.5px solid #d4f0de;
+  border-radius:14px;
+  padding:12px 14px;
+  font-family:'Fredoka',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  background:linear-gradient(180deg,#ffffff,#f8fdfa);
+  color:var(--ink);
+  outline:none;
+  transition:all .2s;
+  box-shadow:inset 0 1px 2px rgba(10,46,28,.04);
+}
+.field textarea{min-height:58px;resize:vertical;font-family:'Fredoka',sans-serif;}
+.field input:focus,.field textarea:focus{
+  border-color:var(--primary);
+  background:#fff;
+  box-shadow:0 0 0 4px var(--glow), inset 0 1px 2px rgba(10,46,28,.04);
+  transform:translateY(-1px);
+}
+.field input::placeholder,.field textarea::placeholder{color:#b0c7ba;font-weight:500;}
+
+/* ============= PREMIUM BUTTONS ============= */
+.btn{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:15px;
+  font-family:'Fredoka',sans-serif;
+  font-weight:800;
+  font-size:14px;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  transition:all .15s cubic-bezier(.4,.2,.2,1);
+  position:relative;
+  overflow:hidden;
+  letter-spacing:.3px;
+  text-shadow:0 1px 2px rgba(0,0,0,.15);
+}
+.btn::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.25),transparent);
+  border-radius:15px 15px 0 0;
+  pointer-events:none;
+}
+.btn::after{
+  content:'';
+  position:absolute;
+  top:50%;left:50%;
+  width:0;height:0;
+  background:rgba(255,255,255,.3);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:width .5s,height .5s;
+  pointer-events:none;
+}
+.btn:active::after{width:300px;height:300px;}
+.btn:active{transform:translateY(2px);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn i{position:relative;z-index:1;}
+.btn span{position:relative;z-index:1;}
+
+.btn.green{
+  background:linear-gradient(180deg,#4ade80 0%,#22c55e 50%,#16a34a 100%);
+  box-shadow:0 5px 0 #0a6b2f, 0 8px 16px rgba(34,197,94,.35), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.btn.green:active{box-shadow:0 2px 0 #0a6b2f, 0 4px 10px rgba(34,197,94,.3);}
+
+.btn.red{
+  background:linear-gradient(180deg,#f87171 0%,#ef4444 50%,#dc2626 100%);
+  box-shadow:0 5px 0 #7f1d1d, 0 8px 16px rgba(239,68,68,.35), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.btn.red:active{box-shadow:0 2px 0 #7f1d1d, 0 4px 10px rgba(239,68,68,.3);}
+
+.btn.blue{
+  background:linear-gradient(180deg,#60a5fa 0%,#3b82f6 50%,#2563eb 100%);
+  box-shadow:0 5px 0 #1e3a8a, 0 8px 16px rgba(59,130,246,.35), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.btn.blue:active{box-shadow:0 2px 0 #1e3a8a, 0 4px 10px rgba(59,130,246,.3);}
+
+.btn.amber{
+  background:linear-gradient(180deg,#fbbf24 0%,#f59e0b 50%,#d97706 100%);
+  box-shadow:0 5px 0 #78350f, 0 8px 16px rgba(245,158,11,.35), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.btn.amber:active{box-shadow:0 2px 0 #78350f, 0 4px 10px rgba(245,158,11,.3);}
+
+.btn.purple{
+  background:linear-gradient(180deg,#a78bfa 0%,#8b5cf6 50%,#7c3aed 100%);
+  box-shadow:0 5px 0 #4c1d95, 0 8px 16px rgba(139,92,246,.35), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.btn.purple:active{box-shadow:0 2px 0 #4c1d95, 0 4px 10px rgba(139,92,246,.3);}
+
+.btn.telegram{
+  background:linear-gradient(180deg,#2aabee 0%,#1e88c7 100%);
+  box-shadow:0 5px 0 #0e5a8a, 0 8px 16px rgba(42,171,238,.35), inset 0 1px 0 rgba(255,255,255,.4);
+}
+.btn.telegram:active{box-shadow:0 2px 0 #0e5a8a, 0 4px 10px rgba(42,171,238,.3);}
+
+.btn.dark{
+  background:linear-gradient(180deg,#475569 0%,#1e293b 100%);
+  box-shadow:0 5px 0 #0f172a, 0 8px 16px rgba(30,41,59,.3), inset 0 1px 0 rgba(255,255,255,.2);
+}
+.btn.dark:active{box-shadow:0 2px 0 #0f172a;}
+
+/* ============= SAVED COUPONS ============= */
+.coupon-item{
+  background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);
+  border:1.5px solid rgba(74,222,128,.5);
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:11px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  box-shadow:0 3px 10px rgba(10,46,28,.06), inset 0 1px 0 rgba(255,255,255,.7);
+  transition:transform .2s;
+}
+.coupon-item:active{transform:scale(.99);}
+
+.coupon-top{display:flex;align-items:center;gap:11px;}
+.coupon-thumb{
+  width:48px;height:48px;
+  border-radius:13px;
+  object-fit:cover;
+  background:#fff;
+  flex:0 0 auto;
+  border:2px solid rgba(74,222,128,.4);
+  box-shadow:0 3px 8px rgba(10,46,28,.1);
+}
+.coupon-info{flex:1;min-width:0;}
+.coupon-title{
+  font-size:13.5px;
+  font-weight:800;
+  color:var(--deep);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  letter-spacing:.1px;
+}
+.coupon-desc{
+  font-size:11px;
+  color:var(--muted);
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-top:2px;
+}
+.coupon-code{
+  font-family:'Courier New',monospace;
+  font-size:10.5px;
+  color:#fff;
+  font-weight:700;
+  background:linear-gradient(135deg,#16a34a,#0a6b2f);
+  padding:2px 9px;
+  border-radius:7px;
+  display:inline-block;
+  margin-top:4px;
+  box-shadow:0 2px 6px rgba(10,107,47,.3);
+}
+
+.coupon-actions{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;}
+.act-btn{
+  border:0;
+  border-radius:11px;
+  padding:9px 4px;
+  font-family:'Fredoka',sans-serif;
+  font-size:10px;
+  font-weight:800;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  transition:all .12s;
+  position:relative;
+  overflow:hidden;
+  letter-spacing:.2px;
+  text-shadow:0 1px 2px rgba(0,0,0,.15);
+}
+.act-btn::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.25),transparent);
+  pointer-events:none;
+}
+.act-btn i{font-size:13px;position:relative;z-index:1;}
+.act-btn:active{transform:translateY(2px);}
+
+.act-btn.active{
+  background:linear-gradient(180deg,#4ade80,#16a34a);
+  box-shadow:0 3px 0 #0a6b2f, 0 4px 10px rgba(34,197,94,.3);
+}
+.act-btn.active:active{box-shadow:0 1px 0 #0a6b2f;}
+
+.act-btn.soon{
+  background:linear-gradient(180deg,#60a5fa,#2563eb);
+  box-shadow:0 3px 0 #1e3a8a, 0 4px 10px rgba(59,130,246,.3);
+}
+.act-btn.soon:active{box-shadow:0 1px 0 #1e3a8a;}
+
+.act-btn.expired{
+  background:linear-gradient(180deg,#fbbf24,#d97706);
+  box-shadow:0 3px 0 #78350f, 0 4px 10px rgba(245,158,11,.3);
+}
+.act-btn.expired:active{box-shadow:0 1px 0 #78350f;}
+
+.act-btn.delete{
+  background:linear-gradient(180deg,#f87171,#dc2626);
+  box-shadow:0 3px 0 #7f1d1d, 0 4px 10px rgba(239,68,68,.3);
+}
+.act-btn.delete:active{box-shadow:0 1px 0 #7f1d1d;}
+
+.empty-saved{
+  text-align:center;
+  padding:36px 20px;
+  color:var(--muted);
+  font-weight:600;
+  font-size:13px;
+}
+.empty-saved i{
+  font-size:44px;
+  display:block;
+  margin-bottom:12px;
+  color:#bbf7d0;
+  filter:drop-shadow(0 4px 8px rgba(34,197,94,.2));
+}
+
+/* ============= SEARCH ============= */
+.search-wrap{margin-bottom:14px;position:relative;}
+.search-wrap i{
+  position:absolute;
+  left:16px;top:50%;
+  transform:translateY(-50%);
+  color:var(--dark);
+  font-size:15px;
+  z-index:1;
+}
+.search-wrap input{
+  width:100%;
+  height:50px;
+  border:1.5px solid rgba(74,222,128,.4);
+  border-radius:16px;
+  padding:0 16px 0 44px;
+  font-family:'Fredoka',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  background:linear-gradient(180deg,#ffffff,#f8fdfa);
+  color:var(--ink);
+  outline:none;
+  box-shadow:0 4px 12px rgba(10,46,28,.06), inset 0 1px 0 rgba(255,255,255,.8);
+  transition:all .2s;
+}
+.search-wrap input:focus{
+  border-color:var(--primary);
+  box-shadow:0 4px 16px rgba(34,197,94,.2), 0 0 0 4px var(--glow);
+}
+
+/* ============= TOP ACTIONS ============= */
+.top-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+
+/* ============= COMMAND LIST ============= */
+.cmd-item{
+  background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);
+  border:1.5px solid rgba(74,222,128,.4);
+  border-radius:14px;
+  padding:11px 12px;
+  margin-bottom:9px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 2px 8px rgba(10,46,28,.05), inset 0 1px 0 rgba(255,255,255,.7);
+  transition:transform .15s;
+}
+.cmd-item:active{transform:scale(.995);}
+.cmd-item .cmd-info{flex:1;min-width:0;}
+.cmd-item .cmd-cmd{
+  font-family:'Courier New',monospace;
+  font-size:12px;
+  color:var(--deep);
+  font-weight:700;
+  word-break:break-all;
+  line-height:1.4;
+  letter-spacing:-.1px;
+}
+.cmd-item .cmd-desc{
+  font-size:10.5px;
+  color:var(--muted);
+  font-weight:600;
+  margin-top:3px;
+}
+.cmd-item .copy-btn{
+  flex:0 0 auto;
+  background:linear-gradient(180deg,#4ade80,#16a34a);
+  color:#fff;
+  border:0;
+  border-radius:11px;
+  padding:9px 12px;
+  font-size:11.5px;
+  font-weight:800;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  box-shadow:0 3px 0 #0a6b2f, 0 4px 10px rgba(34,197,94,.3);
+  font-family:'Fredoka',sans-serif;
+  transition:all .12s;
+  position:relative;
+  overflow:hidden;
+  letter-spacing:.2px;
+}
+.copy-btn::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.25),transparent);
+  pointer-events:none;
+}
+.copy-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0a6b2f;}
+.copy-btn.copied{background:linear-gradient(180deg,#0a6b2f,#064e23);}
+
+.cmd-section-title{
+  font-size:11px;
+  font-weight:800;
+  color:var(--dark);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin:15px 0 9px 6px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.cmd-section-title:first-child{margin-top:0;}
+.cmd-section-title i{
+  font-size:11px;
+  color:var(--primary);
+}
+
+/* ============= TOAST ============= */
+.toast{
+  position:fixed;
+  bottom:26px;
+  left:50%;
+  transform:translate(-50%,140%);
+  background:linear-gradient(180deg,#22c55e,#16a34a);
+  color:#fff;
+  font-weight:700;
+  font-size:13.5px;
+  padding:14px 22px;
+  border-radius:16px;
+  box-shadow:0 12px 32px rgba(10,107,47,.4), inset 0 1px 0 rgba(255,255,255,.3);
+  z-index:300;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:.35s cubic-bezier(.4,.2,.2,1);
+  max-width:calc(100% - 40px);
+  text-align:center;
+  letter-spacing:.2px;
+}
+.toast.show{transform:translate(-50%,0);}
+.toast.error{background:linear-gradient(180deg,#f87171,#dc2626);box-shadow:0 12px 32px rgba(220,38,38,.4), inset 0 1px 0 rgba(255,255,255,.3);}
+.toast.tg{background:linear-gradient(180deg,#2aabee,#1e88c7);box-shadow:0 12px 32px rgba(30,136,199,.4), inset 0 1px 0 rgba(255,255,255,.3);}
+.toast.copy{background:linear-gradient(180deg,#fbbf24,#b45309);box-shadow:0 12px 32px rgba(180,83,9,.4), inset 0 1px 0 rgba(255,255,255,.3);}
+
+/* ============= SCROLLBAR ============= */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(34,197,94,.3);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(34,197,94,.5);}
+
+/* ============= ANIMATIONS ============= */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.card,.coupon-item,.cmd-item{animation:fadeInUp .35s ease both;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎁 LuckyPay Premium</h1>
+  <p id="headerSub">Coupon Manager · Pro Edition</p>
+  <div class="header-badge"><i class="fa-solid fa-crown"></i> PREMIUM</div>
+</div>
+
+<div class="container">
+
+<!-- ============ ADD COUPON ============ -->
+<div class="card">
+  <h3><i class="fa-solid fa-plus-circle"></i> Add New Coupon</h3>
+
+  <div class="field">
+    <label>Image URL</label>
+    <input type="text" id="inpImage" placeholder="https://example.com/image.jpg">
+  </div>
+
+  <div class="field">
+    <label>Title</label>
+    <input type="text" id="inpTitle" placeholder="₹50 Claim">
+  </div>
+
+  <div class="field">
+    <label>Description</label>
+    <textarea id="inpDesc" placeholder="Amazon voucher free"></textarea>
+  </div>
+
+  <div class="field">
+    <label>Link (optional)</label>
+    <input type="text" id="inpLink" placeholder="https://amzn.to/xyz">
+  </div>
+
+  <button class="btn green" onclick="addCoupon()">
+    <i class="fa-solid fa-save"></i> <span>SAVE & ADD TO LIST</span>
+  </button>
+</div>
+
+<!-- ============ SAVED COUPONS ============ -->
+<div class="card">
+  <h3><i class="fa-solid fa-ticket"></i> Saved Coupons <span class="cnt" id="savedCount">0</span></h3>
+  <div id="savedList"></div>
+  <div class="empty-saved" id="savedEmpty">
+    <i class="fa-solid fa-inbox"></i>
+    Abhi koi coupon nahi hai — upar add karo
+  </div>
+</div>
+
+<!-- ============ SEARCH ============ -->
+<div class="search-wrap">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="text" id="searchBox" placeholder="Search commands...">
+</div>
+
+<!-- ============ TOP ACTIONS ============ -->
+<div class="top-actions">
+  <button class="btn telegram" onclick="openTelegram()"><i class="fa-brands fa-telegram"></i> <span>OPEN TELEGRAM</span></button>
+  <button class="btn dark" onclick="wipeAll()"><i class="fa-solid fa-trash"></i> <span>WIPE ALL</span></button>
+</div>
+
+<!-- ============ ALL COMMANDS ============ -->
+<div class="card">
+<h3><i class="fa-solid fa-terminal"></i> All Commands</h3>
+
+<div class="cmd-section-title"><i class="fa-solid fa-gift"></i> Coupon Add</div>
+<div class="cmd-item">
+  <div class="cmd-info">
+    <div class="cmd-cmd">couponadd IMAGE_URL TITLE | DESCRIPTION | LINK</div>
+    <div class="cmd-desc">Naya coupon add (link optional)</div>
+  </div>
+  <button class="copy-btn" onclick="copyCmd('couponadd IMAGE_URL TITLE | DESCRIPTION | LINK',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+
+<div class="cmd-section-title"><i class="fa-solid fa-clock"></i> Expire</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponexpire #CODE</div><div class="cmd-desc">Code se expire</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponexpire #CODE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponexpire TITLE</div><div class="cmd-desc">Title se expire</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponexpire TITLE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponexpire all</div><div class="cmd-desc">Sab expire</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponexpire all',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+
+<div class="cmd-section-title"><i class="fa-solid fa-hourglass-half"></i> Coming Soon</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponsoon #CODE</div><div class="cmd-desc">Coming soon</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponsoon #CODE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponsoon TITLE</div><div class="cmd-desc">Title se soon</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponsoon TITLE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+
+<div class="cmd-section-title"><i class="fa-solid fa-check-circle"></i> Active</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponactive #CODE</div><div class="cmd-desc">Wapas active</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponactive #CODE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponactive TITLE</div><div class="cmd-desc">Title se active</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponactive TITLE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+
+<div class="cmd-section-title"><i class="fa-solid fa-trash-alt"></i> Delete</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">coupondelete #CODE</div><div class="cmd-desc">Code se delete</div></div>
+  <button class="copy-btn" onclick="copyCmd('coupondelete #CODE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">coupondelete TITLE</div><div class="cmd-desc">Title se delete</div></div>
+  <button class="copy-btn" onclick="copyCmd('coupondelete TITLE',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">coupondelete all</div><div class="cmd-desc">Sab delete</div></div>
+  <button class="copy-btn" onclick="copyCmd('coupondelete all',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponclear</div><div class="cmd-desc">Sab clear</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponclear',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+
+<div class="cmd-section-title"><i class="fa-solid fa-list"></i> List</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">couponlist</div><div class="cmd-desc">Sab coupons ki list</div></div>
+  <button class="copy-btn" onclick="copyCmd('couponlist',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+
+<div class="cmd-section-title"><i class="fa-solid fa-satellite-dish"></i> Bot Test</div>
+<div class="cmd-item">
+  <div class="cmd-info"><div class="cmd-cmd">ping</div><div class="cmd-desc">Bot alive check</div></div>
+  <button class="copy-btn" onclick="copyCmd('ping',this)"><i class="fa-solid fa-copy"></i> Copy</button>
+</div>
+
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ CONFIG ============ */
+var BOT_USERNAME = ''; /* ← apna bot username yahan (bina @) */
+
+/* ============ STATE ============ */
+var coupons = JSON.parse(localStorage.getItem('lp_my_coupons') || '[]');
+
+/* ============ TOAST ============ */
+function toast(msg, type){
+  var t = document.getElementById('toast');
+  var ic = type==='error' ? 'fa-circle-xmark' : (type==='tg' ? 'fa-brands fa-telegram' : (type==='copy' ? 'fa-copy' : 'fa-circle-check'));
+  t.innerHTML = '<i class="fa-solid ' + ic + '"></i> ' + msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(function(){ t.className = 'toast'; }, 2400);
+}
+
+/* ============ ADD COUPON ============ */
+function addCoupon(){
+  var image = document.getElementById('inpImage').value.trim();
+  var title = document.getElementById('inpTitle').value.trim();
+  var desc = document.getElementById('inpDesc').value.trim();
+  var link = document.getElementById('inpLink').value.trim();
+
+  if(!image){ toast('Image URL daalo', 'error'); return; }
+  if(!title){ toast('Title daalo', 'error'); return; }
+  if(!desc){ toast('Description daalo', 'error'); return; }
+
+  var code;
+  do {
+    code = Math.floor(1000 + Math.random() * 9000);
+  } while(coupons.some(function(c){ return c.code === code; }));
+
+  var newCoupon = {
+    id: 'c' + Date.now() + Math.random().toString(36).slice(2,6),
+    image: image,
+    title: title,
+    desc: desc,
+    link: link,
+    code: code,
+    status: 'active',
+    time: Date.now()
+  };
+
+  coupons.push(newCoupon);
+  saveCoupons();
+  renderSaved();
+
+  document.getElementById('inpImage').value = '';
+  document.getElementById('inpTitle').value = '';
+  document.getElementById('inpDesc').value = '';
+  document.getElementById('inpLink').value = '';
+
+  updateHeaderSub();
+  toast('✓ Coupon add: #' + code, 'success');
+}
+
+/* ============ SAVE ============ */
+function saveCoupons(){
+  localStorage.setItem('lp_my_coupons', JSON.stringify(coupons));
+}
+
+/* ============ RENDER SAVED LIST ============ */
+function renderSaved(){
+  var list = document.getElementById('savedList');
+  var empty = document.getElementById('savedEmpty');
+  var cnt = document.getElementById('savedCount');
+
+  cnt.textContent = coupons.length;
+
+  if(coupons.length === 0){
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  var html = '';
+  for(var i = 0; i < coupons.length; i++){
+    var c = coupons[i];
+    var statusLabel = c.status === 'active' ? '🟢' : (c.status === 'soon' ? '🔵' : '🔴');
+
+    html += '<div class="coupon-item">';
+    html += '<div class="coupon-top">';
+    html += '<img class="coupon-thumb" src="' + escapeHtml(c.image) + '" onerror="this.src=\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22%3E%3Crect fill=%22%23dcfce7%22 width=%2248%22 height=%2248%22/%3E%3C/svg%3E\'">';
+    html += '<div class="coupon-info">';
+    html += '<div class="coupon-title">' + statusLabel + ' ' + escapeHtml(c.title) + '</div>';
+    html += '<div class="coupon-desc">' + escapeHtml(c.desc) + '</div>';
+    html += '<span class="coupon-code">#' + c.code + '</span>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="coupon-actions">';
+    html += '<button class="act-btn active" onclick="sendAdd(' + i + ')"><i class="fa-solid fa-plus"></i>ADD</button>';
+    html += '<button class="act-btn soon" onclick="sendSoon(' + i + ')"><i class="fa-solid fa-clock"></i>SOON</button>';
+    html += '<button class="act-btn expired" onclick="sendExpire(' + i + ')"><i class="fa-solid fa-hourglass-end"></i>EXPIRE</button>';
+    html += '<button class="act-btn delete" onclick="deleteCoupon(' + i + ')"><i class="fa-solid fa-trash"></i>DEL</button>';
+    html += '</div>';
+
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+
+function escapeHtml(text){
+  if(!text) return '';
+  var d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+/* ============ COUPON ACTIONS ============ */
+function sendAdd(idx){
+  var c = coupons[idx];
+  if(!c) return;
+  var cmd = 'couponadd ' + c.image + ' ' + c.title + ' | ' + c.desc;
+  if(c.link) cmd += ' | ' + c.link;
+  copyText(cmd, 'couponadd');
+  setTimeout(openTelegram, 350);
+}
+
+function sendSoon(idx){
+  var c = coupons[idx];
+  if(!c) return;
+  var cmd = 'couponsoon #' + c.code;
+  copyText(cmd, cmd);
+  setTimeout(openTelegram, 350);
+}
+
+function sendExpire(idx){
+  var c = coupons[idx];
+  if(!c) return;
+  var cmd = 'couponexpire #' + c.code;
+  copyText(cmd, cmd);
+  setTimeout(openTelegram, 350);
+}
+
+function deleteCoupon(idx){
+  if(!confirm('Delete this coupon from list?')) return;
+  coupons.splice(idx, 1);
+  saveCoupons();
+  renderSaved();
+  updateHeaderSub();
+  toast('✓ Coupon deleted', 'copy');
+}
+
+/* ============ COPY ============ */
+function copyText(text, msg){
+  if(!text){ toast('Empty', 'error'); return false; }
+  function done(){ toast('✓ Copied: ' + msg, 'copy'); }
+  function fallback(){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch(e){ toast('Copy failed', 'error'); }
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(fallback);
+  } else { fallback(); }
+  return true;
+}
+
+function copyCmd(cmd, btn){
+  copyText(cmd, cmd.length > 32 ? cmd.slice(0, 32) + '...' : cmd);
+  if(btn){
+    var orig = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+    setTimeout(function(){
+      btn.classList.remove('copied');
+      btn.innerHTML = orig;
+    }, 1800);
+  }
+}
+
+/* ============ OPEN TELEGRAM ============ */
+function openTelegram(){
+  var ua = navigator.userAgent || '';
+  var isMob = /Android|iPhone|iPad|iPod/i.test(ua);
+  if(BOT_USERNAME && BOT_USERNAME !== ''){
+    var tgApp = 'tg://resolve?domain=' + BOT_USERNAME;
+    var tgWeb = 'https://t.me/' + BOT_USERNAME;
+    if(isMob){
+      window.location.href = tgApp;
+      setTimeout(function(){ if(!document.hidden){ window.open(tgWeb, '_blank'); } }, 1200);
+    } else {
+      window.open(tgWeb, '_blank');
+    }
+  } else {
+    if(isMob){ window.location.href = 'tg://'; }
+    else { window.open('https://web.telegram.org/', '_blank'); }
+  }
+  toast('Opening Telegram...', 'tg');
+}
+
+/* ============ WIPE ALL ============ */
+function wipeAll(){
+  if(!confirm('WIPE ALL COUPONS?\n\nCannot be undone!')) return;
+  coupons = [];
+  saveCoupons();
+  renderSaved();
+  updateHeaderSub();
+  toast('✓ All wiped', 'copy');
+}
+
+/* ============ SEARCH ============ */
+document.getElementById('searchBox').addEventListener('input', function(e){
+  var q = e.target.value.toLowerCase().trim();
+  var items = document.querySelectorAll('.cmd-item');
+  var sections = document.querySelectorAll('.cmd-section-title');
+  if(!q){
+    items.forEach(function(i){ i.style.display = ''; });
+    sections.forEach(function(s){ s.style.display = ''; });
+    return;
+  }
+  items.forEach(function(item){
+    var txt = item.textContent.toLowerCase();
+    item.style.display = txt.indexOf(q) !== -1 ? '' : 'none';
+  });
+  sections.forEach(function(sec){
+    var next = sec.nextElementSibling;
+    var hasVisible = false;
+    while(next && !next.classList.contains('cmd-section-title')){
+      if(next.classList.contains('cmd-item') && next.style.display !== 'none'){ hasVisible = true; break; }
+      next = next.nextElementSibling;
+    }
+    sec.style.display = hasVisible ? '' : 'none';
+  });
+});
+
+/* ============ HEADER SUB UPDATE ============ */
+function updateHeaderSub(){
+  var count = document.querySelectorAll('.cmd-item').length;
+  document.getElementById('headerSub').textContent = count + ' Commands · ' + coupons.length + ' Saved';
+}
+
+/* ============ INIT ============ */
+function init(){
+  renderSaved();
+  updateHeaderSub();
+  toast('Ready!', 'copy');
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+console.log('🎁 LuckyPay Premium ready!');
+</script>
+</body>
+</html>
